@@ -1,46 +1,23 @@
 import pandas as pd
 import random
 import os
+import sys
+import os
 
-print("Directorio actual:", os.getcwd())
-players = [
-    "Raya",
-    "White",
-    "Saliba",
-    "Gabriel",
-    "Zinchenko",
-    "Rice",
-    "Odegaard",
-    "Havertz",
-    "Saka",
-    "Martinelli",
-    "Jesus"
-]
-
-# posiciones promedio aproximadas
-positions = {
-    "Raya": (50,10),
-    "White": (85,30),
-    "Saliba": (35,25),
-    "Gabriel": (65,25),
-    "Zinchenko": (15,30),
-    "Rice": (50,55),
-    "Odegaard": (40,70),
-    "Havertz": (60,70),
-    "Saka": (85,90),
-    "Martinelli": (15,90),
-    "Jesus": (50,80)
-}
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from data.data_players import players
 
 passes = []
 
+player_names = list(players.keys())
+
 for i in range(250):  # cantidad de pases del partido
 
-    passer = random.choice(players)
-    receiver = random.choice([p for p in players if p != passer])
+    passer = random.choice(player_names)
+    receiver = random.choice([p for p in player_names if p != passer])
 
-    x_start, y_start = positions[passer]
-    x_end, y_end = positions[receiver]
+    x_start, y_start = players[passer]["position"]
+    x_end, y_end = players[receiver]["position"]
 
     # agregar ruido para que no todos los pases sean iguales
     x_start += random.uniform(-7,7)
@@ -58,8 +35,10 @@ for i in range(250):  # cantidad de pases del partido
         "y_end": round(y_end,2)
     })
 
-df = pd.DataFrame(passes)
+if __name__ == "__main__":
 
-df.to_csv("data/data_passing.csv", index=False)
+    df = pd.DataFrame(passes)
 
-print("Dataset creado: data_passing.csv")
+    df.to_csv("data/data_passing.csv", index=False)
+
+    print("Dataset creado: data_passing.csv")
